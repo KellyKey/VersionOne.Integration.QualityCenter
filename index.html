@@ -1,76 +1,800 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>VersionOne.Integration.QualityCenter by versionone</title>
-  </head>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>VersionOne Quality Center Integration</title>
+<link rel="stylesheet" href="styles/help.css" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="main">
+		<h1>VersionOne Quality Center Integration</h1>
+		<h2>Introduction</h2>
+		<h2>Contents</h2>
+		<ul>
+			<li><a href='#VersionOneQualityCenterIntegration-Description'>Description</a></li>
+			<li><a
+				href='#VersionOneQualityCenterIntegration-SystemRequirements'>System
+					Requirements</a></li>
+			<li><a href='#VersionOneQualityCenterIntegration-Download'>Download</a></li>
+			<li><a href='#VersionOneQualityCenterIntegration-Installation'>Installation</a></li>
+			<li><a href='#VersionOneQualityCenterIntegration-Configuration'>Configuration</a>
+				<ul>
+					<li><a
+						href='#VersionOneQualityCenterIntegration-ConfigureQualityCenter'>Configure
+							Quality Center </a></li>
+					<li><a
+						href='#VersionOneQualityCenterIntegration-ConfigureVersionOne'>Configure
+							VersionOne </a></li>
+					<li><a
+						href='#VersionOneQualityCenterIntegration-ConfiguretheIntegration'>Configure
+							the Integration </a></li>
+				</ul></li>
+			<li><a href='#VersionOneQualityCenterIntegration-Testing'>Testing
+			</a>
+				<ul>
+					<li><a
+						href='#VersionOneQualityCenterIntegration-ToCreateaQualityCenterTestfromaVersionOneTest'>To
+							Create a Quality Center Test from a VersionOne Test</a></li>
+					<li><a
+						href='#VersionOneQualityCenterIntegration-ToUpdatetheStatusofaVersionOneTestfromQualityCenter'>To
+							Update the Status of a VersionOne Test from Quality Center</a></li>
+					<li><a
+						href='#VersionOneQualityCenterIntegration-ToCreateaVersionOneDefectfromQualityCenter'>To
+							Create a VersionOne Defect from Quality Center</a></li>
+					<li><a
+						href='#VersionOneQualityCenterIntegration-ToUpdateaQualityCenterDefectfromVersionOne'>To
+							Update a Quality Center Defect from VersionOne</a></li>
+				</ul></li>
+		</ul>
 
-  <body>
-    <div id="container">
-      <div class="inner">
+		<h2>
+			<a name="VersionOneQualityCenterIntegration-Description"></a>Description
+		</h2>
+		<p>The VersionOne Quality Center Integration (V1QualityCenter)
+			allows an organization to leverage its investment in Quality Center
+			as part of an integrated platform for agile development. This
+			integration affords agile teams the ability to:</p>
 
-        <header>
-          <h1>VersionOne.Integration.QualityCenter</h1>
-          <h2>include acceptance tests from stories in test plans and triage defects for inclusion in agile planning</h2>
-        </header>
+		<ul>
+			<li>Create Tests in Quality Center from Tests defined in
+				VersionOne</li>
+			<li>Update the status of a VersionOne Test from the
+				corresponding Quality Center Test</li>
+			<li>Create Defects in VersionOne from Defects in Quality Center</li>
+			<li>Mark Quality Center Defects as Fixed when the corresponding
+				VersionOne Defect is closed</li>
+		</ul>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/versionone/VersionOne.Integration.QualityCenter/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/versionone/VersionOne.Integration.QualityCenter/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/versionone/VersionOne.Integration.QualityCenter" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
 
-        <hr>
+		<p>The following sequence diagram illustrates how V1QualityCenter
+			interacts with Quality Center and VersionOne.</p>
+		<div class=wsd wsd_style="qsd">
+			<pre>
+title Quality Center Integration Sequence
 
-        <section id="main_content">
-          <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+Integration->VersionOne: Tests for Quality Center?
+activate Integration
+activate VersionOne
+VersionOne-->Integration: No
+deactivate VersionOne
+Integration->Quality Center: Any test updates?
+activate Quality Center
+Quality Center-->Integration: No
+deactivate Quality Center
+Integration->Quality Center: Defects for VersionOne?
+activate Quality Center
+Quality Center-->Integration: No
+deactivate Quality Center
+Integration->VersionOne: Any recently closed defects?
+activate VersionOne
+VersionOne-->Integration: No
+deactivate VersionOne
+deactivate Integration
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+VersionOne User->VersionOne: Assign Test to Quality Center
+Integration->VersionOne: Tests for Quality Center?
+activate Integration
+activate VersionOne
+VersionOne-->Integration: Yes
+deactivate VersionOne
+Integration->Quality Center: Create Test
+activate Integration
+Integration->VersionOne: Create Test Reference
+deactivate Integration
+Integration->Quality Center: Any test updates?
+activate Quality Center
+Quality Center-->Integration: No
+deactivate Quality Center
+Integration->Quality Center: Defects for VersionOne?
+activate Quality Center
+Quality Center-->Integration: No
+deactivate Quality Center
+Integration->VersionOne: Any recently closed defects?
+activate VersionOne
+VersionOne-->Integration: No
+deactivate VersionOne
+deactivate Integration
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+Quality Center User->Quality Center: Run Test
+Integration->VersionOne: Tests for Quality Center?
+activate Integration
+activate VersionOne
+VersionOne-->Integration: No
+deactivate VersionOne
+Integration->Quality Center: Any test updates?
+activate Quality Center
+Quality Center-->Integration: Yes
+deactivate Quality Center
+Integration->VersionOne: Update Test Status
+activate Integration
+deactivate Integration
+Integration->Quality Center: Defects for VersionOne?
+activate Quality Center
+Quality Center-->Integration: No
+deactivate Quality Center
+Integration->VersionOne: Any recently closed defects?
+activate VersionOne
+VersionOne-->Integration: No
+deactivate VersionOne
+deactivate Integration
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+Quality Center User->Quality Center: Assign Defect to VersionOne
+Integration->VersionOne: Tests for Quality Center?
+activate Integration
+activate VersionOne
+VersionOne-->Integration: No
+deactivate VersionOne
+Integration->Quality Center: Any test updates?
+activate Quality Center
+Quality Center-->Integration: No
+deactivate Quality Center
+Integration->Quality Center: Defects for VersionOne?
+activate Quality Center
+Quality Center-->Integration: Yes
+deactivate Quality Center
+Integration->VersionOne: Create Defect
+activate Integration
+Integration->Quality Center: Create Defect Reference
+deactivate Integration
+Integration->VersionOne: Any recently closed defects?
+activate VersionOne
+VersionOne-->Integration: No
+deactivate VersionOne
+deactivate Integration
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+VersionOne User->VersionOne: Close Defect
+Integration->VersionOne: Tests for Quality Center?
+activate Integration
+activate VersionOne
+VersionOne-->Integration: No
+deactivate VersionOne
+Integration->Quality Center: Any test updates?
+activate Quality Center
+Quality Center-->Integration: No
+deactivate Quality Center
+Integration->Quality Center: Defects for VersionOne?
+activate Quality Center
+Quality Center-->Integration: No
+deactivate Quality Center
+Integration->VersionOne: Any recently closed defects?
+activate VersionOne
+VersionOne-->Integration: Yes
+deactivate VersionOne
+Integration->Quality Center: Close Defect
+activate Integration
+deactivate Integration
+deactivate Integration
+</pre>
+		</div>
+		<script type="text/javascript"
+			src="http://www.websequencediagrams.com/service.js"></script>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+		<h2>
+			<a name="VersionOneQualityCenterIntegration-SystemRequirements"></a>System
+			Requirements
+		</h2>
+		<p>VersionOne:</p>
+		<ul>
+			<li>8.3 and above, including Team Edition</li>
+		</ul>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+		<p>Integration Server Operating System:</p>
+		<ul>
+			<li>Windows 2003, 2008 with .NET Framework 4.0</li>
+		</ul>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+		<p>Quality Center:</p>
+		<ul>
+			<li>Tested With Release 9.1.0.4353, 9.2.0.4862, 10.0, 11.0</li>
+		</ul>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+		<h2>
+			<a name="VersionOneQualityCenterIntegration-Download"></a>Download
+		</h2>
+		<p>The latest version of V1QualityCenter is available from <a
+				href="http://community.versionone.com/Downloads/default.aspx">the
+				VersionOne Community site</a>.</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+		<h2>
+			<a name="VersionOneQualityCenterIntegration-Installation"></a>Installation
+		</h2>
+		<p>These installation instructions assume that Quality Center is
+			already installed, configured, and working properly.</p>
+		<ol>
+			<li>Determine Install Location
+				<p>V1QualityCenter can be installed on any server with network
+					access to both VersionOne and Quality Center. Exact placement
+					should be determined by your internal software management
+					requirements. The integration server must meet the System
+					Requirements stated above.</p>
+			</li>
+			<li>Extract Files
+				<p>Download V1QualityCenter using the link above and extract it
+					into a folder of your choice.</p>
+			</li>
+			<li>Configure
+				<p>Configuration for the Quality Center Integration is a 3 step
+					process.</p>
+				<ol>
+					<li><a href="#VersionOneQualityCenterIntegration-ConfigureQC">Configure
+							Quality Center</a></li>
+					<li><a href="#VersionOneQualityCenterIntegration-ConfigureV1">Configure
+							VersionOne</a></li>
+					<li><a
+						href="#VersionOneQualityCenterIntegration-ConfigureServiceHost">Configure
+							ServiceHost</a> <br class="atl-forced-newline" /></li>
+				</ol>
+			</li>
+			<li>Start integration
+				<p>Open up the command prompt, navigate to your installation folder,
+					and run the following command:<br />
+					<code>VersionOne.ServiceHost.exe</code>
+				</p>
+				<p>If you have configured your system properly, you should see
+					several [Info] messages followed by a [Startup] message.</p>
+			</li>
+			<li>Test the integration
+				<p>Details on testing the integration are available below in the <a
+						href="#VersionOneQualityCenterIntegration-TestIntegration">testing
+						section</a>.
+				</p>
+			</li>
+			<li>Install as a Windows Service
+				<p>Run the following command from the console window:<br />
+					<code>VersionOne.ServiceHost.exe --install</code>
+				</p>
+				<p>This command installs the service so it will run under the
+					account NT AUTHORITY\Local Service. Local Service must be given
+					access privileges to the directory where the V1QualityCenter was
+					installed so it can store its state and write to log files. Follow
+					the steps below to change the security on the installation
+					directory:</p>
+				<ol>
+					<li>Right click the installation folder from Windows Explorer.</li>
+					<li>Select "properties".</li>
+					<li>Select the "Security" tab.</li>
+					<li>Click the "Add" button.</li>
+					<li>Enter "Local Service" and click "OK".</li>
+					<li>Click the "Allow" checkbox for the "Full Control" row.</li>
+					<li>Click "OK" to save the changes.</li>
+				</ol>
+			</li>
+		</ol>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-        </section>
+		<h2>
+			<a name="VersionOneQualityCenterIntegration-Configuration"></a>Configuration
+		</h2>
+		<h3>
+			<a name="VersionOneQualityCenterIntegration-ConfigureQualityCenter"></a>Configure Quality Center
+		</h3>
+		<p>This section describes how to configure Quality Center for use
+			with VersionOne.</p>
+		<ol>
+			<li>Create a User Field on "Test" for storing the VersionOne
+				identifier (Tools | Customize | Project Entities).
+				<p>
+					<a class="thumbnail" href='images/VersionOneTestId.jpg'><img
+						src="images/thumbnails/versiononetestid" border="0" /></a>
+				</p>
+			</li>
+			<li>Select or create a user in Quality Center to represent the
+				VersionOne system.
+				<p>This user must have sufficient rights to accept and modify
+					defects. Additionally, this user must have access to all Quality
+					Center projects that contain defects that will be pushed to
+					VersionOne.</p>
+			</li>
+		</ol>
 
-        <footer>
-          VersionOne.Integration.QualityCenter is maintained by <a href="https://github.com/versionone">versionone</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
 
-        
-      </div>
-    </div>
-  </body>
+		<h3>
+			<a name="VersionOneQualityCenterIntegration-ConfigureVersionOne"></a>Configure
+			VersionOne<a name="VersionOneQualityCenterIntegration-ConfigureV1"></a>
+		</h3>
+		<ol>
+			<li>Add "Quality Center" to the list as a valid "Source".
+				<p class='info'>Skip this step if you are configuring a
+					VersionOne Team Edition instance.</p>
+				<p>
+					<a class="thumbnail" href='images/ValidSource.jpg'><img
+						src="images/thumbnails/validsource" border="0" /></a>
+				</p>
+			</li>
+			<li>Select or create a user in VersionOne to represent the
+				Quality Center system.
+				<p>This user must have sufficient rights to create Defects, and
+					accept and modify Tests in VersionOne. Additionally, this user must
+					have access to all VersionOne projects that contain Tests and
+					Defect statuses that will be pushed to Quality Center. The default
+					filters expect this user's "Short Name" (i.e. Owners Nickname) to
+					be "qc".</p>
+			</li>
+			<li>Determine where to store the Quality Center identifier in
+				VersionOne.
+				<p>The integration needs a text field in VersionOne to store the
+					Quality Center identifier, which is a reference to the domain,
+					project, and defect ID in Quality Center. By default this is the
+					"Reference" field. If you are already using this field for a
+					different purpose, you will need to create a custom text field and
+					note the name.</p>
+			</li>
+		</ol>
+
+
+		<h3>
+			<a name="VersionOneQualityCenterIntegration-ConfiguretheIntegration"></a>Configure
+			the Integration<a
+				name="VersionOneQualityCenterIntegration-ConfigureServiceHost"></a>
+		</h3>
+		<p>To configure the Quality Center integration, run the ServiceHost
+			configuration tool<br />
+			<code>ServiceHostConfigTool.exe</code>
+		</p>
+		<p>The following section describes how to configure the VersionOne
+			Quality Center Integration using the configuration tool. This tool
+			updates the VersionOne.ServiceHost.exe.config file located in the
+			same directory.</p>
+		<ol>
+			<li>On the "General" tab specify your VersionOne connection
+				details.
+				<p>
+					<a class="thumbnail" href='images/VersionOneConnection.png'><img
+						src="images/thumbnails/versiononeconnection" border="0" /></a>
+				</p>
+				<p>The following table describes the fields on this tab:</p>
+				<table>
+					<tbody>
+						<tr>
+							<th>Field</th>
+							<th>Description</th>
+						</tr>
+						<tr>
+							<td>Server URL</td>
+							<td>This is the URL to your VersionOne server</td>
+						</tr>
+						<tr>
+							<td>Username</td>
+							<td>VersionOne user that will create defects (i.e. the user
+								created in the previous steps)</td>
+						</tr>
+						<tr>
+							<td>Password</td>
+							<td>Password for the specified user</td>
+						</tr>
+						<tr>
+							<td>Use Windows Integrated Authentication</td>
+							<td>Check this box if your VersionOne server is configured
+								to use Windows Integrated Authentication</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p>If there is a proxy between this machine and the VersionOne
+					instance, you'll also need to configure the following settings:</p>
+				<table>
+					<tbody>
+						<tr>
+							<th>Field</th>
+							<th>Description</th>
+						</tr>
+						<tr>
+							<td>Use Proxy For Connection</td>
+							<td>Determines if the integration tries to connect through a
+								Proxy</td>
+						</tr>
+						<tr>
+							<td>Proxy URL</td>
+							<td>This is the URL to your Proxy Server</td>
+						</tr>
+						<tr>
+							<td>Proxy Username</td>
+							<td>The username that will get you past this proxy</td>
+						</tr>
+						<tr>
+							<td>Proxy Password</td>
+							<td>The password for the Proxy Username</td>
+						</tr>
+						<tr>
+							<td>Proxy Domain</td>
+							<td>Name of Proxy Domain</td>
+						</tr>
+					</tbody>
+				</table>
+			</li>
+			<li>Once the VersionOne parameters are specified, press Verify
+				button to continue.</li>
+			<li>On the "Defects" tab specify the VersionOne field that will
+				hold the Quality Center ID. This is typically the "Reference" field.
+				<p>
+					<a class="thumbnail" href='images/QualityCenterId.png'><img
+						src="images/thumbnails/qualitycenterid" border="0" /></a>
+				</p>
+				<p>The following table describes the fields on this tab:</p>
+				<table>
+					<tbody>
+						<tr>
+							<th>Field</th>
+							<th>Description</th>
+						</tr>
+						<tr>
+							<td>Reference Field Name</td>
+							<td>Defect field used to hold Quality Center ID. By default
+								this is the Reference field.</td>
+						</tr>
+						<tr>
+							<td>Disabled</td>
+							<td>Check this box to disable polling VersionOne for Defect
+								updates. If disabled, defects will not be transferred to
+								VersionOne from Quality Center nor will defects closed in
+								VersionOne send updates to Quality Center.</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p class='info'>You must restart the service after making a
+					config file change.</p>
+			</li>
+			<li>On the "Test Services" tab specify how VersionOne tests will
+				be pushed and updated to/from Quality Center.
+				<p>
+					<a class="thumbnail" href='images/TestServices.png'><img
+						src="images/thumbnails/testservices" border="0" /></a>
+				</p>
+				<p>The following table describes the fields on this tab:</p>
+				<table>
+					<tbody>
+						<tr>
+							<th>Field</th>
+							<th>Description</th>
+						</tr>
+						<tr>
+							<td>Disabled</td>
+							<td>Check this box to disable polling VersionOne for Test
+								updates.</td>
+						</tr>
+						<tr>
+							<td>Reference Field Name</td>
+							<td>Field on a VersionOne Test used to hold Quality Center
+								ID. By default this is the Reference field.</td>
+						</tr>
+						<tr>
+							<td>Passed Test Status</td>
+							<td>The Test Status value in VersionOne that indicates a
+								test succeeded.</td>
+						</tr>
+						<tr>
+							<td>Failed Test Status</td>
+							<td>The Test Status value in VersionOne that indicates a
+								test failed.</td>
+						</tr>
+						<tr>
+							<td>Change Comment</td>
+							<td>The change comment put into history for any
+								modifications the service makes in VersionOne</td>
+						</tr>
+						<tr>
+							<td>Description Suffix</td>
+							<td>A suffix for the description of any defects that the
+								service creates; Embedded Rich Text (HTML) is valid in this
+								suffix</td>
+						</tr>
+						<tr>
+							<td>Create Defect</td>
+							<td>Indicates whether the TestWriterService should create
+								defects when a failed test is closed in VersionOne. Valid values
+								are:<br class="atl-forced-newline" />* All: The integration
+								will create a VersionOne Defect for any closed test in the
+								project when the test fails.<br class="atl-forced-newline" />*
+								CurrentIteration: The integration will only create VersionOne
+								Defects for closed tests within the current iteration when the
+								test fails.<br class="atl-forced-newline" />* None: The
+								integration never create VersionOne defects when a test fails.
+							</td>
+						</tr>
+						<tr>
+							<td>Base Query Filter</td>
+							<td>The VersionOne query used to locate Tests in VersionOne
+								that need to be created in Quality Center. The default query
+								will find Tests that have a blank Reference and the Test Owner
+								Short Name (i.e. Owner's Nickname) is "qc" and Status value is
+								blank.</td>
+						</tr>
+						<tr>
+							<td>Project Mapping</td>
+							<td>Specify the list of projects in VersionOne that should
+								be queried for test cases to send to Quality Center. Multiple
+								VersionOne projects can be specified. If the project has
+								children, you can include those children when querying with the
+								"Incl. Child Projects" checkbox. The "Quality Center Project ID"
+								is not the actual name of the project in Quality Center.
+								Instead, the ID specified here is simply a reference to the
+								corresponding "Project ID" in the project mappings within the
+								"Quality Center" tab on the config tool. The actual Quality
+								Center project specification is created on the "Quality Center"
+								-&gt; "Project and Priority Mappings" tab.</td>
+						</tr>
+					</tbody>
+				</table>
+				<p class='info'>You must restart the service after making a
+					config file change.</p>
+			</li>
+			<li>On the "Quality Center" tab, specify your Quality Center
+				connection details and the data transfer behavior.
+				<p>
+					<a class="thumbnail" href='images/QualityCenterTab.png'><img
+						src="images/thumbnails/qualitycentertab" border="0" /></a>
+				</p>
+				<table>
+					<tbody>
+						<tr>
+							<th>Field</th>
+							<th>Description</th>
+						</tr>
+						<tr>
+							<td>Disabled</td>
+							<td>Check this box if you want to disable polling Quality
+								Center for updates to tests and new defects.</td>
+						</tr>
+						<tr>
+							<td>URL</td>
+							<td>Fully qualified URL to your Quality Center instance</td>
+						</tr>
+						<tr>
+							<td>Username</td>
+							<td>Valid Quality Center user</td>
+						</tr>
+						<tr>
+							<td>Password</td>
+							<td>Password for specified user</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<ol>
+					<li>Click Verify to ensure the connection parameters are
+						correct.</li>
+					<li>Configure the Defect Search Criteria.
+						<table>
+							<tbody>
+								<tr>
+									<th>Field</th>
+									<th>Description</th>
+								</tr>
+								<tr>
+									<td>Field Name</td>
+									<td>Quality Center Field to include in query for Defects
+										you want created in VersionOne</td>
+								</tr>
+								<tr>
+									<td>Field Value</td>
+									<td>Value expected in Field to trigger defect creation in
+										VersionOne</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<p class='info'>The typical rows specified are BG_RESPONSIBLE
+							with the Quality Center user name representing the VersionOne
+							user, and BG_STATUS with the status value to trigger defect
+							creation in VersionOne, such as "New".</p>
+					</li>
+					<li>Specify the VersionOne Source value (the value you created
+						under step 1 of Configure VersionOne).
+						<p class='info'>VersionOne Team Edition contains a Source
+							value of "External System"</p>
+					</li>
+					<li>Specify the Quality Center Defect status value to set back
+						in Quality Center after the Defect is <em>created</em> in
+						VersionOne.
+					</li>
+					<li>Specify the Quality Center Defect status value to set back
+						in Quality Center after the Defect is <em>closed</em> in
+						VersionOne.
+					</li>
+				</ol>
+			</li>
+			<li>Configure which Quality Center Projects are polled (Project
+				and Priority Mappings)
+				<p>Project Mapping allows you to specify which Quality Center
+					Projects are polled and where to create Defects in VersionOne.</p>
+				<p>
+					<a class="thumbnail" href='images/ProjectAndPriorityMappings.png'><img
+						src="images/thumbnails/projectandprioritymappings" border="0" /></a>
+				</p>
+				<table>
+					<tbody>
+						<tr>
+							<th>Field</th>
+							<th>Description</th>
+						</tr>
+						<tr>
+							<td>Project ID</td>
+							<td>The integration identifier for this project (the same
+								value you entered as an identifier on the "Test Service" tab)</td>
+						</tr>
+						<tr>
+							<td>Domain</td>
+							<td>Quality Center Domain</td>
+						</tr>
+						<tr>
+							<td>Project</td>
+							<td>Quality Center Project Name</td>
+						</tr>
+						<tr>
+							<td>Folder</td>
+							<td>Name of Quality Center folder to use for creating tests
+								(if it doesn't exist, it will be created)</td>
+						</tr>
+						<tr>
+							<td>VersionOne ID Field</td>
+							<td>Quality Center custom field that will hold the
+								VersionOne Test ID (the one you created under "Project Entities"
+								in Quality Center)</td>
+						</tr>
+						<tr>
+							<td>VersionOne Project</td>
+							<td>VersionOne Project to use for creating Defects</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p class='info'>You can map multiple Quality Center projects to
+					the same VersionOne project.</p>
+			</li>
+			<li>Map your Priority Values.
+				<p>Priority mapping allows you to configure how the VersionOne
+					Defect priority value is set based on the Quality Center Priority
+					value. The algorithm for mapping is simple, if the Quality Center
+					Priority value is in the mapping, the VersionOne defect value is
+					set to the mapped value. If the Quality Center Priority value is
+					not found, the VersionOne defect value is not set.</p>
+				<p>
+					<a class="thumbnail" href='images/ProjectAndPriorityMappings.png'><img
+						src="images/thumbnails/projectandprioritymappings" border="0" /></a>
+				</p>
+				<p>To add a Priority mapping you need to do the following:</p>
+				<ol>
+					<li>Click on the "Project and Priority Mappings" tab.</li>
+					<li>In the Priority Mappings grid, select a VersionOne
+						Priority value from the dropdown.</li>
+					<li>Supply the corresponding Quality Center Project value
+						name.</li>
+				</ol>
+				<p>To remove a mapping:</p>
+				<ol>
+					<li>Select the desired row.</li>
+					<li>Click the Delete current row button.</li>
+				</ol>
+			</li>
+			<li>Save your changes and exit the program.</li>
+		</ol>
+
+		<h2>
+			<a name="VersionOneQualityCenterIntegration-Testing"></a>Testing<a
+				name="VersionOneQualityCenterIntegration-TestIntegration"></a>
+		</h2>
+		<p>Each section below describes how to test one aspect of the
+			VersionOne Quality Center Integration. To shut down the VersionOne
+			Quality Center Integration after testing, press "Q" in the console
+			window.</p>
+
+		<h3>
+			<a
+				name="VersionOneQualityCenterIntegration-ToCreateaQualityCenterTestfromaVersionOneTest"></a>To
+			Create a Quality Center Test from a VersionOne Test
+		</h3>
+		<ol>
+			<li>In VersionOne
+				<ol>
+					<li>Select a project you defined on the "Test Service" tab in
+						the configuration tool (<a
+						href="#VersionOneQualityCenterIntegration-ConfigureServiceHost">Configure
+							ServiceHost</a>).
+					</li>
+					<li>Select a Test and set the field to match the criteria
+						defined on the "Test Service" tab. If you used the default
+						configuration, you need to set the owner to the "qc" user and
+						ensure that the test has no value in the Status or Reference
+						fields.</li>
+				</ol>
+			</li>
+			<li>In Quality Center
+				<ol>
+					<li>Connect to the project you expected the test to appear. <br
+						class="atl-forced-newline" /> <br class="atl-forced-newline" /></li>
+					<li>Verify that the test appears in the Test Plan section
+						under the folder configured on the "Quality Center" tab in the <em>Project</em>
+						section.
+					</li>
+				</ol>
+			</li>
+		</ol>
+
+
+		<h3>
+			<a
+				name="VersionOneQualityCenterIntegration-ToUpdatetheStatusofaVersionOneTestfromQualityCenter"></a>To
+			Update the Status of a VersionOne Test from Quality Center
+		</h3>
+		<ol>
+			<li>In Quality Center
+				<ol>
+					<li>Assign the test created from VersionOne to a TestSet.</li>
+					<li>Change the status of this test.</li>
+				</ol>
+			</li>
+			<li>In VersionOne
+				<ol>
+					<li>Verify the test status has changed.</li>
+				</ol>
+			</li>
+		</ol>
+
+
+		<h3>
+			<a
+				name="VersionOneQualityCenterIntegration-ToCreateaVersionOneDefectfromQualityCenter"></a>To
+			Create a VersionOne Defect from Quality Center
+		</h3>
+		<ol>
+			<li>In Quality Center
+				<ol>
+					<li>Assign a Defect to the "Version One" user.</li>
+					<li>Set the Defect State to "New".</li>
+					<li>Verify the defect state has changed to Open.</li>
+				</ol>
+			</li>
+			<li>In VersionOne
+				<ol>
+					<li>Verify the defect is in the backlog for the VersionOne
+						project specified on the "Quality Center" tab in the configuration
+						tool</li>
+				</ol>
+			</li>
+		</ol>
+
+
+		<h3>
+			<a
+				name="VersionOneQualityCenterIntegration-ToUpdateaQualityCenterDefectfromVersionOne"></a>To
+			Update a Quality Center Defect from VersionOne
+		</h3>
+		<ol>
+			<li>In VersionOne
+				<ol>
+					<li>Close a Defect that was created from Quality Center. <br
+						class="atl-forced-newline" /> <br class="atl-forced-newline" /></li>
+				</ol>
+			</li>
+			<li>In Quality Center
+				<ol>
+					<li>Verify the defect status is set to "Fixed".</li>
+				</ol>
+			</li>
+		</ol>
+
+	</div>
+</body>
 </html>
