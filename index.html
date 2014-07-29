@@ -16,7 +16,6 @@
 			<li><a
 				href='#VersionOneQualityCenterIntegration-SystemRequirements'>System
 					Requirements</a></li>
-			<li><a href='#VersionOneQualityCenterIntegration-Download'>Download</a></li>
 			<li><a href='#VersionOneQualityCenterIntegration-Installation'>Installation</a></li>
 			<li><a href='#VersionOneQualityCenterIntegration-Configuration'>Configuration</a>
 				<ul>
@@ -210,13 +209,6 @@ deactivate Integration
 		</ul>
 
 		<h2>
-			<a name="VersionOneQualityCenterIntegration-Download"></a>Download
-		</h2>
-		<p>The latest version of V1QualityCenter is available from <a
-				href="http://community.versionone.com/Downloads/default.aspx">the
-				VersionOne Community site</a>.</p>
-
-		<h2>
 			<a name="VersionOneQualityCenterIntegration-Installation"></a>Installation
 		</h2>
 		<p>These installation instructions assume that Quality Center is
@@ -292,6 +284,16 @@ deactivate Integration
 		<p>This section describes how to configure Quality Center for use
 			with VersionOne.</p>
 		<ol>
+			<li> Install local Quality Center libraries
+				<p>
+					In order for the integration to communicate with your Quality Center instance, libraries must be locally installed.  If you have ever browsed to Quality Center from the machine that you are installing the integration on, there is a chance that the libraries are already installed. To be certain you, should reinstall them.
+					<ol>
+						<li>Browse to the Quality Center add-ins page (http://myQualitiyCenter/qcbin/addins.html)</li>
+						<li>Select "HP Quality Center Connectivity Add-Ins" and install. These are COM libraries that will be downloaded,installed and registered automatically.
+						</li>
+					</ol>
+				</p>
+			</li>
 			<li>Create a User Field on "Test" for storing the VersionOne
 				identifier (Tools | Customize | Project Entities).
 				<p>
